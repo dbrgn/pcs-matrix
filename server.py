@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function, division
 
 import os
 from datetime import date, datetime, timedelta
+from functools import wraps
 from collections import defaultdict
 
 from flask import Flask, request, session, escape
@@ -47,8 +48,19 @@ def logged_in():
     return 'access_token' in session
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not 'access_token' in session:
+            flash(u'<strong>Achtung:</strong> Für diese Funktion musst du dich ' + \
+                  u'<a href="/login/">einloggen</a>.', 'danger')
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def get_auth():
-    assert logged_in()
+    assert 'access_token' in session
     return OAuth1(OAUTH_KEY,
                   client_secret=OAUTH_SECRET,
                   resource_owner_key=session['access_token'],
@@ -118,7 +130,7 @@ def oauth_callback():
     session['access_token_secret'] = resource_owner_secret
 
     # Redirect to home page
-    flash('Login erfolgreich.')
+    flash('Login erfolgreich.', 'success')
     return redirect(url_for('home'))
 
 
@@ -126,7 +138,7 @@ def oauth_callback():
 def logout():
     """Clear session."""
     session.clear()
-    flash('Du wurdest abgemeldet.')
+    flash('Du wurdest abgemeldet.', 'success')
     return redirect(url_for('home'))
 
 
@@ -147,6 +159,7 @@ def home():
 
 
 @app.route('/step0/', methods=['GET'])
+@login_required
 def step0():
     """Step 0: Start wizard, get date range."""
     oauth = get_auth()
@@ -159,6 +172,7 @@ def step0():
 
 
 @app.route('/step1/', methods=['GET'])
+@login_required
 def step1():
     """Step 1: Get service type."""
     oauth = get_auth()
@@ -184,6 +198,7 @@ def step1():
 
 
 @app.route('/step2/', methods=['GET'])
+@login_required
 def step2():
     """Step 2: Get categories."""
 
@@ -209,6 +224,7 @@ def step2():
 
 
 @app.route('/matrix/', methods=['GET'])
+@login_required
 def matrix():
     """Show the Matrix."""
 
