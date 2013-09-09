@@ -20,9 +20,10 @@ from session import RedisSessionInterface
 app = Flask(__name__)
 
 # Basic configuration
+SECRET_KEY = os.environ.get('SECRET_KEY')
 app.config.update(
     DEBUG = True,
-    SECRET_KEY = '\x7f\xd5\xf3\n1\x03/\xc5\x15\xf0q\xf1\x18\xda\x08h`Z\xad\xa8\xaa\rm\xcb',
+    SECRET_KEY = SECRET_KEY,
     SESSION_INTERFACE = RedisSessionInterface(prefix='o2:session:'),
     SESSION_COOKIE_HTTPONLY = True,
     SESSION_COOKIE_SECURE = True,
@@ -258,5 +259,8 @@ if __name__ == '__main__':
         raise EnvironmentError('Please set OAUTH_KEY env variable.')
     if OAUTH_SECRET is None:
         raise EnvironmentError('Please set OAUTH_SECRET env variable.')
-    http_server = WSGIServer(('', 8002), app)
+    if SECRET_KEY is None:
+        raise EnvironmentError('Please set SECRET_KEY env variable.')
+    PORT = int(os.environ.get('PORT', '8000'))
+    http_server = WSGIServer(('', PORT), app)
     http_server.serve_forever()
