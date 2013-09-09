@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block bodyclass %}matrix{% endblock %}
+
+{% block content %}
+
+    <p>Willkommen, {{ first_name }}!</p>
+    <a href="/logout">Click here to logout.</a>
+
+    <table id="matrix">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                {% for dateobj in dates %}
+                    <th>{{ dateobj.strftime("%d.%m.") }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for person, persondates in people.iteritems() %}
+                <tr>
+                    <th>{{ person }}</th>
+                    {% for dateobj in dates %}
+                        <td>{{ persondates.get(dateobj, "")|join(", ") }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

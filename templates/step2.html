@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block bodyclass %}step2{% endblock %}
+
+{% block content %}
+
+    <p>Willkommen, {{ first_name }}!</p>
+    <a href="/logout">Click here to logout.</a>
+
+    <form action="/matrix/" method="get">
+
+        <div id="category">
+            <h3>Kategorie</h3>
+            <select name="category">
+                <option value="none">&nbsp;</option>
+                {% for category in categories.keys() %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="jobs" class="hidden">
+            <h3><span class="category_name"></span> Jobs</h3>
+            {% for category, jobs in categories.iteritems() %}
+                {% for job in jobs %}
+                    <div class="cat-{{ category}}">
+                        <input type="checkbox" name="jobs" id="job-{{ category }}-{{ job }}" value="{{ job }}">
+                        <label for="job-{{ category }}-{{ job }}">{{ job }}</label>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <br><br>
+
+        <input type="hidden" name="start_date" value="{{ start_date }}">
+        <input type="hidden" name="end_date" value="{{ end_date }}">
+        <input type="hidden" name="service_type" value="{{ service_type }}">
+
+        <input type="submit" value="Weiter">
+
+    </form>
+
+{% endblock %}

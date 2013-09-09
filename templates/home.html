@@ -1,42 +1,27 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Planning Center Matrix</title>
-        <link rel="stylesheet" href="static/style.css" type="text/css">
-    </head>
-    <body>
-        <h1>Planning Center Matrix</h1>
+{% extends 'base.html' %}
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="flashes">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+{% block content %}
 
-        {% if is_logged_in %}
-            <h3>Logout</h3>
-            <a href="/logout">Click here to logout.</a>
-        {% else %}
-            <h3>Login</h3>
-            <a href="/login">
-                <img src="/static/planning_center_online_logo.png" alt="Login">
-            </a>
-        {% endif %}
+    {% if is_logged_in %}
+        <p>Willkommen, {{ first_name }}!</p>
+        <a href="/logout">Click here to logout.</a>
+    {% else %}
+        <h3>Login</h3>
+        <a href="/login">
+            <img src="/static/planning_center_online_logo.png" alt="Login">
+        </a>
+    {% endif %}
 
-        <h3>Session</h3>
-        <pre>{{ session }}</pre>
-
-        <h3>Bereich</h3>
-        <select id="section">
-            <option value="technik">Technik</option>
-        </select>
+    <form action="/step1/" method="get">
 
         <h3>Zeitbereich</h3>
-        Von <input type="date" name="startdate">
-        bis <input type="date" name="enddate">
-    </body>
-</html>
+        Von <input type="date" name="start_date" value="{{ start_date.strftime('%Y-%m-%d') }}">
+        bis <input type="date" name="end_date" value="{{ end_date.strftime('%Y-%m-%d') }}">
+
+        <br><br>
+
+        <input type="submit" value="Assistent Starten">
+
+    </form>
+
+{% endblock %}

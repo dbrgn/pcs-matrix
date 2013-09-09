@@ -26,3 +26,7 @@ ul.flashes li {
     background-color: #687c9e;
     border: 1px solid #d6dfea;
 }
+
+.hidden {
+    display: none;
+}

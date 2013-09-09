@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Planning Center Matrix</title>
+        <link rel="stylesheet" href="/static/style.css" type="text/css">
+    </head>
+    <body class="{% block bodyclass %}{% endblock %}">
+        <h1>Planning Center Matrix</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/scripts.js"></script>
+    </body>
+</html>

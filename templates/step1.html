@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block bodyclass %}step1{% endblock %}
+
+{% block content %}
+
+    <p>Willkommen, {{ first_name }}!</p>
+    <a href="/logout">Click here to logout.</a>
+
+    <form action="/step2/" method="get">
+
+        <h3>Service Type</h3>
+
+        <select name="service_type">
+            {% for service_type in service_types %}
+                <option value="{{ service_type.id }}">{{ service_type.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" name="start_date" value="{{ start_date }}">
+        <input type="hidden" name="end_date" value="{{ end_date }}">
+
+        <br><br>
+
+        <input type="submit" value="Weiter">
+
+    </form>
+
+{% endblock %}
