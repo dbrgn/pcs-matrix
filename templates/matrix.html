@@ -21,13 +21,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for person, persondates in people.iteritems() %}
+                {% for person, persondata in people.iteritems() %}
                     <tr>
-                        <th>{{ person.replace(' ', '&nbsp;')|safe }}</th>
+                        <th>{{ person }}</th>
                         {% for dateobj in dates %}
-                            <td>{{ persondates.get(dateobj, "")|join(", ") }}</td>
+                            <td>{{ persondata.get(dateobj, "")|join(", ") }}</td>
                         {% endfor %}
-                        <td></td>
+                        <td>{{ persondata.get("count", 0) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

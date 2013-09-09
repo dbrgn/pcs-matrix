@@ -225,20 +225,20 @@ def matrix():
 
     # Loop over and process plans
     plans = get_plans(service_type)
-    print('Jobs: {!r}'.format(jobs))
     for plan in plans:
         sort_date = plan['sort_date'].rsplit(' ', 1)[0]
         date_obj = datetime.strptime(sort_date, sort_date_format)
         dates.add(date_obj)
         for job in plan['plan_people']:
             if not job['category_name'] == category:
-                continue
+                continue  # Skip irrelevant categories
             if not job['position'] in jobs:
-                continue
+                continue  # Skip irrelevant jobs
             if job['status'] not in ['C', 'U']:
-                continue
-            name = escape(job['person_name'])
+                continue  # Skip declined jobs
+            name = job['person_name']
             people[name][date_obj].add(job['position'])
+            people[name]['count'] = people[name].get('count', 0) + 1
 
     context = {
         'dates': sorted(dates),
