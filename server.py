@@ -80,7 +80,7 @@ def inject_login_status():
 ### AUTH ###
 
 
-@app.route('/login')
+@app.route('/login/')
 def login():
     """OAuth login: Obtain a request token and redirect user to authorization
     page."""
@@ -117,15 +117,15 @@ def oauth_callback():
     session['access_token_secret'] = resource_owner_secret
 
     # Redirect to home page
-    flash('Login successful.')
+    flash('Login erfolgreich.')
     return redirect(url_for('home'))
 
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     """Clear session."""
     session.clear()
-    flash('You were logged out.')
+    flash('Du wurdest abgemeldet.')
     return redirect(url_for('home'))
 
 
@@ -245,6 +245,12 @@ def matrix():
         'people': people,
     }
     return render_template('matrix.html', **context)
+
+
+@app.route('/about/', methods=['GET'])
+def about():
+    """About this webapp."""
+    return render_template('about.html')
 
 
 if __name__ == '__main__':

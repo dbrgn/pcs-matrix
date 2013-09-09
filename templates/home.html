@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block bodyclass %}home{% endblock %}
+
 {% block content %}
 
     <h1>Willkommen</h1>
@@ -11,7 +13,11 @@
     ({{ "gezuru@gmail.com"|urlize }}).</p>
 
     <div class="spacer-20">
-        <a href="/step0/" class="btn btn-lg btn-primary">Assistent Starten</a>
+        {% if is_logged_in %}
+            <a href="/step0/" class="btn btn-lg btn-primary">Assistent Starten</a>
+        {% else %}
+            <a href="/login/" class="btn btn-lg btn-primary">Login</a>
+        {% endif %}
     </div>
 
 {% endblock %}
