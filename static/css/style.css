@@ -1,0 +1,53 @@
+/** General styling **/
+
+body {
+    background-color: #2f405d;
+}
+
+.container-main {
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.container-fullwidth {
+    padding: 0;
+}
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav>li>a {
+    color: #ccd;
+}
+
+
+/** Specific styling **/
+
+body.matrix #tablewrapper {
+    overflow: auto;
+}
+
+
+/** Useful classes **/
+
+.hidden {
+    display: none;
+}
+
+.spacer-10 {
+    margin-top: 10px;
+}
+
+.spacer-20 {
+    margin-top: 20px;
+}
+
+.spacer-30 {
+    margin-top: 30px;
+}
+
+.spacer-40 {
+    margin-top: 40px;
+}
+
+.spacer-50 {
+    margin-top: 50px;
+}

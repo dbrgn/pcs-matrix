@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block bodyclass %}step0{% endblock %}
+
+{% block content %}
+
+    <h1>Matrix-Assistent</h1>
+
+    <p>Dieser Assistent ermöglicht es, einen Report zur Personen-Planung
+    während einem bestimmten Zeitraum zu erstellen.</p>
+
+    <form action="/step1/" method="get">
+        <h3>Datumsbereich</h3>
+
+        <div>
+            Von <input type="date" name="start_date" value="{{ start_date.strftime('%Y-%m-%d') }}">
+            bis <input type="date" name="end_date" value="{{ end_date.strftime('%Y-%m-%d') }}">
+        </div>
+
+        <div class="spacer-20">
+            <input class="btn btn-primary" type="submit" value="Weiter">
+        </div>
+
+    </form>
+
+{% endblock %}

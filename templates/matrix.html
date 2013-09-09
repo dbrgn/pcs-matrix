@@ -4,28 +4,34 @@
 
 {% block content %}
 
-    <p>Willkommen, {{ first_name }}!</p>
-    <a href="/logout">Click here to logout.</a>
+    <h1>Planungs-Matrix</h1>
 
-    <table id="matrix">
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                {% for dateobj in dates %}
-                    <th>{{ dateobj.strftime("%d.%m.") }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for person, persondates in people.iteritems() %}
+    <p>In der folgenden Matrix sieht man auf einen Blick, wer wann und wie
+    häufig eingeteilt ist.</p>
+
+    <div id="tablewrapper" class="col-md-12">
+        <table class="table table-hover table-condensed table-bordered" id="matrix">
+            <thead>
                 <tr>
-                    <th>{{ person }}</th>
+                    <th>&nbsp;</th>
                     {% for dateobj in dates %}
-                        <td>{{ persondates.get(dateobj, "")|join(", ") }}</td>
+                        <th>{{ dateobj.strftime("%d.%m.") }}</th>
                     {% endfor %}
+                    <th>Anzahl</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for person, persondates in people.iteritems() %}
+                    <tr>
+                        <th>{{ person.replace(' ', '&nbsp;')|safe }}</th>
+                        {% for dateobj in dates %}
+                            <td>{{ persondates.get(dateobj, "")|join(", ") }}</td>
+                        {% endfor %}
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

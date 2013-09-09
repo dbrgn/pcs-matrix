@@ -2,26 +2,13 @@
 
 {% block content %}
 
-    {% if is_logged_in %}
-        <p>Willkommen, {{ first_name }}!</p>
-        <a href="/logout">Click here to logout.</a>
-    {% else %}
-        <h3>Login</h3>
-        <a href="/login">
-            <img src="/static/planning_center_online_logo.png" alt="Login">
-        </a>
-    {% endif %}
+    <h1>Willkommen</h1>
 
-    <form action="/step1/" method="get">
+    <p>Dies ist eine kleine Webapp zum einfacheren Planen von
+    Job-Zuteilungen im O2 Planning Center.</p>
 
-        <h3>Zeitbereich</h3>
-        Von <input type="date" name="start_date" value="{{ start_date.strftime('%Y-%m-%d') }}">
-        bis <input type="date" name="end_date" value="{{ end_date.strftime('%Y-%m-%d') }}">
+    <br>
 
-        <br><br>
-
-        <input type="submit" value="Assistent Starten">
-
-    </form>
+    <a href="/step0/" class="btn btn-lg btn-primary">Assistent Starten</a>
 
 {% endblock %}

@@ -4,8 +4,9 @@
 
 {% block content %}
 
-    <p>Willkommen, {{ first_name }}!</p>
-    <a href="/logout">Click here to logout.</a>
+    <h1>Arbeitsbereiche / Jobs</h1>
+
+    <p>Hier kann nach Arbeitsbereich und Aufgaben gefiltert werden.</p>
 
     <form action="/matrix/" method="get">
 
@@ -31,13 +32,13 @@
             {% endfor %}
         </div>
 
-        <br><br>
-
         <input type="hidden" name="start_date" value="{{ start_date }}">
         <input type="hidden" name="end_date" value="{{ end_date }}">
         <input type="hidden" name="service_type" value="{{ service_type }}">
 
-        <input type="submit" value="Weiter">
+        <div class="spacer-20">
+            <input class="btn btn-primary" type="submit" value="Weiter">
+        </div>
 
     </form>
 

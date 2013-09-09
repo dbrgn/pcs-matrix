@@ -142,9 +142,19 @@ def home():
         context['first_name'] = data['first_name']
         context['last_name'] = data['last_name']
         # TODO save name into session
-    context['start_date'] = date.today()
-    context['end_date'] = date.today() + timedelta(90)
     return render_template('home.html', **context)
+
+
+@app.route('/step0/', methods=['GET'])
+def step0():
+    """Step 0: Start wizard, get date range."""
+    oauth = get_auth()
+
+    context = {
+        'start_date': date.today(),
+        'end_date': date.today() + timedelta(90),
+    }
+    return render_template('step0.html', **context)
 
 
 @app.route('/step1/', methods=['GET'])
@@ -227,7 +237,8 @@ def matrix():
                 continue
             if job['status'] not in ['C', 'U']:
                 continue
-            people[job['person_name']][date_obj].add(job['position'])
+            name = escape(job['person_name'])
+            people[name][date_obj].add(job['position'])
 
     context = {
         'dates': sorted(dates),

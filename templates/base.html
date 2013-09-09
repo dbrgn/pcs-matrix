@@ -2,25 +2,61 @@
 <html>
     <head>
         <title>Planning Center Matrix</title>
-        <link rel="stylesheet" href="/static/style.css" type="text/css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css">
     </head>
     <body class="{% block bodyclass %}{% endblock %}">
-        <h1>Planning Center Matrix</h1>
+
+        <div class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">O2 Planning Center Matrix</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/">Home</a></li>
+                        <li><a href="/step0/">Assistent</a></li>
+                        <li><a href="/about/">About</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_logged_in %}
+                            <li><a href="/logout">Logout</a></li>
+                        {% else %}
+                            <li><a href="/login">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <ul class="flashes">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
+                <div class="container container-fullwidth">
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+            </div>
             {% endif %}
         {% endwith %}
 
-        {% block content %}
-        {% endblock %}
+        <div class="container container-main">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/static/scripts.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/scripts.js"></script>
     </body>
 </html>

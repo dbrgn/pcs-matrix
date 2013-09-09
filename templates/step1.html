@@ -4,8 +4,10 @@
 
 {% block content %}
 
-    <p>Willkommen, {{ first_name }}!</p>
-    <a href="/logout">Click here to logout.</a>
+    <h1>Gottesdienste</h1>
+
+    <p>Hier kann der gewünschte Gottesdienst (O2, Homerun, etc...) gewählt
+    werden.</p>
 
     <form action="/step2/" method="get">
 
@@ -20,9 +22,9 @@
         <input type="hidden" name="start_date" value="{{ start_date }}">
         <input type="hidden" name="end_date" value="{{ end_date }}">
 
-        <br><br>
-
-        <input type="submit" value="Weiter">
+        <div class="spacer-20">
+            <input type="submit" class="btn btn-primary" value="Weiter">
+        </div>
 
     </form>
 
