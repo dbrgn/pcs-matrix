@@ -1,3 +1,4 @@
 VIRTUAL
 *.swp
 *.pyc
+static/robots.txt
