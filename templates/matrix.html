@@ -15,7 +15,7 @@
                 <tr>
                     <th>&nbsp;</th>
                     {% for dateobj in dates %}
-                        <th>{{ dateobj.strftime("%d.%m.") }}</th>
+                        <th title="{{ dateobj }}">{{ dateobj.strftime("%d.%m.") }}</th>
                     {% endfor %}
                     <th>Anzahl</th>
                 </tr>
