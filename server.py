@@ -23,11 +23,11 @@ app = Flask(__name__)
 # Basic configuration
 SECRET_KEY = os.environ.get('SECRET_KEY')
 app.config.update(
-    DEBUG = True,
-    SECRET_KEY = SECRET_KEY,
-    SESSION_INTERFACE = RedisSessionInterface(prefix='o2:session:'),
-    SESSION_COOKIE_HTTPONLY = True,
-    SESSION_COOKIE_SECURE = True,
+    DEBUG=True,
+    SECRET_KEY=SECRET_KEY,
+    SESSION_INTERFACE=RedisSessionInterface(prefix='o2:session:'),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,
 )
 
 # OAuth 1a config
@@ -52,7 +52,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not 'access_token' in session:
-            flash(u'<strong>Achtung:</strong> Für diese Funktion musst du dich ' + \
+            flash(u'<strong>Achtung:</strong> Für diese Funktion musst du dich ' +
                   u'<a href="/login/">einloggen</a>.', 'danger')
             return redirect(url_for('home'))
         return f(*args, **kwargs)
@@ -67,19 +67,45 @@ def get_auth():
                   resource_owner_secret=session['access_token_secret'])
 
 
-def get_plans(service_type):
-    """Get list of plans for specified service type."""
+def get_plans(service_type, from_date=None, until_date=None):
+    """Get list of plans for specified service type.
+
+    Args:
+        service_type:
+            The desired service type.
+        from_date:
+            A ``datetime.date`` object with the start date. Default ``None``.
+        until_date:
+            A ``datetime.date`` object with the end date. Default ``None``.
+
+    Returns:
+        List of plans in JSON format.
+
+    """
+    # Validate args
+    if from_date:
+        assert hasattr(from_date, 'strftime'), 'from_date must be a date object.'
+    if until_date:
+        assert hasattr(until_date, 'strftime'), 'until_date must be a date object.'
 
     # Fetch list of plan IDs
     oauth = get_auth()
-    r = requests.get('{0}service_types/{1}/plans.json'.format(BASE_URL, service_type), auth=oauth)
+    url_tpl = '{base}service_types/{service_type}/plans.json'
+    if from_date:
+        url_tpl += '?since={since}'
+    url_data = {
+        'base': BASE_URL,
+        'service_type': service_type,
+        'since': from_date.strftime('%Y-%m-%d'),
+    }
+    r = requests.get(url_tpl.format(**url_data), auth=oauth)
     plan_ids = [plan['id'] for plan in r.json()]
 
     # Fetch each plan
     urls = ['{0}plans/{1}.json'.format(BASE_URL, plan_id) for plan_id in plan_ids]
     rs = (grequests.get(url, auth=oauth) for url in urls)
     responses = grequests.map(rs)
-    return [r.json() for r in responses]
+    return [resp.json() for resp in responses]
 
 
 ### CONTEXT PROCESSORS ###
@@ -162,8 +188,6 @@ def home():
 @login_required
 def step0():
     """Step 0: Start wizard, get date range."""
-    oauth = get_auth()
-
     context = {
         'start_date': date.today(),
         'end_date': date.today() + timedelta(90),
@@ -207,8 +231,12 @@ def step2():
     end_date = escape(request.args['end_date'])
     service_type = escape(request.args['service_type'])
 
+    # Parse dates
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     # Get all the categories and positions
-    plans = get_plans(service_type)
+    plans = get_plans(service_type, from_date=start_date_obj, until_date=end_date_obj)
     categories = defaultdict(set)
     for plan in plans:
         for job in plan['plan_people']:
@@ -235,16 +263,20 @@ def matrix():
     category = escape(request.args['category'])
     jobs = map(escape, request.args.getlist('jobs'))
 
+    # Parse dates
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     # Prepare variables
     dates = set()
     people = defaultdict(lambda: defaultdict(set))
     sort_date_format = '%Y/%m/%d %H:%M:%S'
 
     # Loop over and process plans
-    plans = get_plans(service_type)
+    plans = get_plans(service_type, from_date=start_date_obj, until_date=end_date_obj)
     for plan in plans:
         sort_date = plan['sort_date'].rsplit(' ', 1)[0]
-        date_obj = datetime.strptime(sort_date, sort_date_format)
+        date_obj = datetime.strptime(sort_date, sort_date_format).date()
         dates.add(date_obj)
         for job in plan['plan_people']:
             if not job['category_name'] == category:
