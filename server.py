@@ -11,6 +11,7 @@ from flask import render_template, url_for, redirect, abort, flash
 
 import requests
 import grequests
+import dateutil.parser
 from gevent.wsgi import WSGIServer
 from requests_oauthlib import OAuth1
 from oauth import get_request_token, get_access_token
@@ -99,7 +100,14 @@ def get_plans(service_type, from_date=None, until_date=None):
         'since': from_date.strftime('%Y-%m-%d'),
     }
     r = requests.get(url_tpl.format(**url_data), auth=oauth)
-    plan_ids = [plan['id'] for plan in r.json()]
+    if not until_date:
+        plan_ids = [plan['id'] for plan in r.json()]
+    else:
+        plan_ids = []
+        for plan in r.json():
+            plan_date = dateutil.parser.parse(plan['sort_date']).date()
+            if plan_date <= until_date:
+                plan_ids.append(plan['id'])
 
     # Fetch each plan
     urls = ['{0}plans/{1}.json'.format(BASE_URL, plan_id) for plan_id in plan_ids]
@@ -270,13 +278,13 @@ def matrix():
     # Prepare variables
     dates = set()
     people = defaultdict(lambda: defaultdict(set))
-    sort_date_format = '%Y/%m/%d %H:%M:%S'
+    plan_date_format = '%Y/%m/%d %H:%M:%S'
 
     # Loop over and process plans
     plans = get_plans(service_type, from_date=start_date_obj, until_date=end_date_obj)
     for plan in plans:
-        sort_date = plan['sort_date'].rsplit(' ', 1)[0]
-        date_obj = datetime.strptime(sort_date, sort_date_format).date()
+        plan_date = plan['sort_date'].rsplit(' ', 1)[0]
+        date_obj = datetime.strptime(plan_date, plan_date_format).date()
         dates.add(date_obj)
         for job in plan['plan_people']:
             if not job['category_name'] == category:
